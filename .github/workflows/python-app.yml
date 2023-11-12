@@ -1,0 +1,68 @@
+name: Build Executables
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11.6' # Adjust the version as needed
+    - name: Install dependencies
+      run: |
+        pip3 install -r requirements.txt
+        pip3 install pyinstaller
+    - name: Build Windows Executable
+      run: pyinstaller --onefile --windowed user_interface.py
+    - name: Upload Windows Executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-executable
+        path: dist/user_interface.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11.6'
+    - name: Install dependencies
+      run: |
+        pip3 install -r requirements.txt
+        pip3 install pyinstaller
+    - name: Build Linux Executable
+      run: pyinstaller --onefile --windowed user_interface.py
+    - name: Upload Linux Executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-executable
+        path: dist/user_interface
+
+  build-mac:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11.6'
+    - name: Install dependencies
+      run: |
+        pip3 install -r requirements.txt
+        pip3 install pyinstaller
+    - name: Build Mac Executable
+      run: pyinstaller --onefile --windowed user_interface.py
+    - name: Upload Mac Executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: mac-executable
+        path: dist/user_interface.app
